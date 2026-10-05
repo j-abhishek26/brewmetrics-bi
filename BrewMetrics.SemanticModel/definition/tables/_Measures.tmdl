@@ -22,6 +22,10 @@ table _Measures
 
 		annotation PBI_FormatHint = {"currencyCulture":"en-IN"}
 
+	measure 'City Sales Rank' = IF(ISINSCOPE(Dim_City[city]), RANKX(ALLSELECTED(Dim_City[city]), [Total Sales], , DESC, DENSE))
+		formatString: 0
+		lineageTag: 33a5cd03-f5b4-4ad8-8b92-0e91113d2f67
+
 	column Column1
 		dataType: string
 		lineageTag: 3aa27756-80a7-45ea-bb1a-31327a5ea8a2

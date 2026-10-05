@@ -1,0 +1,37 @@
+table _Measures
+	lineageTag: f1a0959c-4cb0-4bb7-bb56-1dc56c43e139
+
+	measure 'Total Sales' = SUM(Fact_Sales[sales_amount])
+		formatString: "₹"\ #,0;#,0\ -"₹";"₹"\ #,0
+		lineageTag: e22013be-a216-4ff1-b963-2baa512c91e5
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-IN"}
+
+	measure 'Sales Prior Month' = CALCULATE([Total Sales], DATEADD(Dim_Date[date], -1, MONTH))
+		lineageTag: bc23d56a-daeb-4ce1-9e95-1f897d6fcd34
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Sales MoM Growth %' = DIVIDE([Total Sales] - [Sales Prior Month], [Sales Prior Month], BLANK())
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: c66df7a5-f336-46d2-b830-abe4409b3094
+
+	column Column1
+		dataType: string
+		lineageTag: 3aa27756-80a7-45ea-bb1a-31327a5ea8a2
+		summarizeBy: none
+		sourceColumn: Column1
+
+		annotation SummarizationSetBy = Automatic
+
+	partition _Measures = m
+		mode: import
+		source =
+				let
+				    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i44FAA==", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [Column1 = _t]),
+				    #"Changed Type" = Table.TransformColumnTypes(Source,{{"Column1", type text}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+

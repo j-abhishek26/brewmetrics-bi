@@ -16,6 +16,12 @@ table _Measures
 		formatString: 0.0%;-0.0%;0.0%
 		lineageTag: c66df7a5-f336-46d2-b830-abe4409b3094
 
+	measure 'Running Total Sales' = CALCULATE([Total Sales], FILTER(ALLSELECTED(Dim_Date[date]), Dim_Date[date] <= MAX(Dim_Date[date])))
+		formatString: "₹"\ #,0.00;#,0.00\ -"₹";"₹"\ #,0.00
+		lineageTag: 6c380443-2a2d-4ac3-b943-58055ee718ce
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-IN"}
+
 	column Column1
 		dataType: string
 		lineageTag: 3aa27756-80a7-45ea-bb1a-31327a5ea8a2

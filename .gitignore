@@ -1,0 +1,4 @@
+# Power BI cache files
+.pbi/
+*.pbip.lock
+localSettings.json

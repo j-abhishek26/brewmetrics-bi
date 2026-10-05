@@ -1,0 +1,91 @@
+table Dim_Date
+	lineageTag: 1d5c98ce-cf5d-4729-aa7e-0d678ad2ef6e
+	dataCategory: Time
+
+	column date
+		dataType: dateTime
+		isKey
+		formatString: Long Date
+		lineageTag: d21e5f7a-494d-4ee3-8a5c-66efd695001b
+		summarizeBy: none
+		sourceColumn: date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Year
+		dataType: int64
+		formatString: 0
+		lineageTag: c471ae69-45c1-49eb-8085-f80e4eec1824
+		summarizeBy: sum
+		sourceColumn: Year
+
+		annotation SummarizationSetBy = Automatic
+
+	column MonthNo
+		dataType: int64
+		formatString: 0
+		lineageTag: 8bf8acd1-1036-4ab0-be5f-bbe30a8a1afd
+		summarizeBy: sum
+		sourceColumn: MonthNo
+
+		annotation SummarizationSetBy = Automatic
+
+	column MonthName
+		dataType: string
+		lineageTag: 4379eb39-812d-48ea-beee-3afb058027f4
+		summarizeBy: none
+		sourceColumn: MonthName
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quarter
+		dataType: int64
+		formatString: 0
+		lineageTag: 4eb0b34a-0962-4799-a255-67e9750aea98
+		summarizeBy: sum
+		sourceColumn: Quarter
+
+		annotation SummarizationSetBy = Automatic
+
+	column Day
+		dataType: int64
+		formatString: 0
+		lineageTag: 53110355-5f6c-4386-9f6b-391b89c43025
+		summarizeBy: sum
+		sourceColumn: Day
+
+		annotation SummarizationSetBy = Automatic
+
+	column DayOfWeek
+		dataType: string
+		lineageTag: 9a2210d2-15e4-4081-8efb-7d4b44bfdb72
+		summarizeBy: none
+		sourceColumn: DayOfWeek
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Dim_Date = m
+		mode: import
+		source =
+				let
+				    Source = Raw_Sales,
+				    #"Removed Other Columns" = Table.SelectColumns(Source,{"date"}),
+				    #"Removed Duplicates" = Table.Distinct(#"Removed Other Columns"),
+				    #"Inserted Year" = Table.AddColumn(#"Removed Duplicates", "Year", each Date.Year([date]), Int64.Type),
+				    #"Inserted Month" = Table.AddColumn(#"Inserted Year", "Month", each Date.Month([date]), Int64.Type),
+				    #"Renamed Columns" = Table.RenameColumns(#"Inserted Month",{{"Month", "MonthNo"}}),
+				    #"Inserted Month Name" = Table.AddColumn(#"Renamed Columns", "Month Name", each Date.MonthName([date]), type text),
+				    #"Renamed Columns1" = Table.RenameColumns(#"Inserted Month Name",{{"Month Name", "MonthName"}}),
+				    #"Inserted Quarter" = Table.AddColumn(#"Renamed Columns1", "Quarter", each Date.QuarterOfYear([date]), Int64.Type),
+				    #"Inserted Day" = Table.AddColumn(#"Inserted Quarter", "Day", each Date.Day([date]), Int64.Type),
+				    #"Inserted Day Name" = Table.AddColumn(#"Inserted Day", "Day Name", each Date.DayOfWeekName([date]), type text),
+				    #"Renamed Columns2" = Table.RenameColumns(#"Inserted Day Name",{{"Day Name", "DayOfWeek"}})
+				in
+				    #"Renamed Columns2"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,12 @@
+relationship 0541c852-1a07-af1d-ff2f-f42b722ac486
+	fromColumn: Fact_Sales.date
+	toColumn: Dim_Date.date
+
+relationship 38bbdebe-49b6-6b00-d6b4-d8a2c5bbdbee
+	fromColumn: Fact_Sales.item
+	toColumn: Dim_Product.item
+
+relationship 47ca27fd-0cbd-081f-3f6f-9f03b350f895
+	fromColumn: Fact_Sales.city
+	toColumn: Dim_City.city
+

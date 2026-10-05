@@ -1,0 +1,34 @@
+table Dim_City
+	lineageTag: b508b7ac-3736-44c1-8ec1-baa68ad7d35d
+
+	column city
+		dataType: string
+		lineageTag: 0bf8aab9-3c86-4d1e-ad6f-8f1f28cea4ee
+		summarizeBy: none
+		sourceColumn: city
+
+		annotation SummarizationSetBy = Automatic
+
+	column state
+		dataType: string
+		lineageTag: 21265b25-14c9-4176-99ad-615e507eb3ed
+		summarizeBy: none
+		sourceColumn: state
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Dim_City = m
+		mode: import
+		source =
+				let
+				    Source = Raw_Sales,
+				    #"Removed Other Columns" = Table.SelectColumns(Source,{"city"}),
+				    #"Removed Duplicates" = Table.Distinct(#"Removed Other Columns"),
+				    #"Added Conditional Column" = Table.AddColumn(#"Removed Duplicates", "state", each if [city] = "Bengaluru" then "Karnataka" else if [city] = "Chennai" then "Tamil Nadu" else if [city] = "Coimbatore" then "Tamil Nadu" else if [city] = "Hyderabad" then "Telangana" else null)
+				in
+				    #"Added Conditional Column"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

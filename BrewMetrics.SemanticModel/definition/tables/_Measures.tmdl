@@ -26,6 +26,16 @@ table _Measures
 		formatString: 0
 		lineageTag: 33a5cd03-f5b4-4ad8-8b92-0e91113d2f67
 
+	measure 'Cold Brew Sales' = CALCULATE([Total Sales], Dim_Product[item] = "Cold Brew")
+		formatString: "₹"\ #,0.00;#,0.00\ -"₹";"₹"\ #,0.00
+		lineageTag: 1945da68-d78e-486b-a288-5ecc96742047
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-IN"}
+
+	measure 'Cold Brew Sales Share %' = DIVIDE([Cold Brew Sales], CALCULATE([Total Sales], ALL(Dim_Product)), 0)
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: c2cf9d52-c678-4362-97d0-520eef343267
+
 	column Column1
 		dataType: string
 		lineageTag: 3aa27756-80a7-45ea-bb1a-31327a5ea8a2

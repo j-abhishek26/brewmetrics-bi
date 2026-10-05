@@ -38,9 +38,12 @@ table _Measures
 
 	column Column1
 		dataType: string
+		isHidden
 		lineageTag: 3aa27756-80a7-45ea-bb1a-31327a5ea8a2
 		summarizeBy: none
 		sourceColumn: Column1
+
+		changedProperty = IsHidden
 
 		annotation SummarizationSetBy = Automatic
 
